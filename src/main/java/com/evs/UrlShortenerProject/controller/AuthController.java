@@ -1,6 +1,5 @@
 package com.evs.UrlShortenerProject.controller;
 
-import com.evs.URL.shortener.project.dto.*;
 import com.evs.UrlShortenerProject.dto.*;
 import com.evs.UrlShortenerProject.service.AuthService;
 import com.evs.UrlShortenerProject.service.OtpService;
