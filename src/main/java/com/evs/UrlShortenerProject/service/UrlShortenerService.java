@@ -57,11 +57,29 @@ public class UrlShortenerService
     public ShortenResponse shorten(ShortenRequest shortenRequest)
     {
         String originalUrl = shortenRequest.getOriginalUrl();
+        User currentUser = getCurrentUser();
+
+        UrlMapping existing = null;
+        if(currentUser != null)
+        {
+            existing = urlMappingRepo.findByOriginalUrlAndUser(originalUrl, currentUser).orElse(null);
+        }
+        if(existing != null)
+        {
+            return ShortenResponse.builder()
+                    .shortUrl(baseUrl + "/" + existing.getShortCode())
+                    .shortCode(existing.getShortCode())
+                    .originalUrl(originalUrl)
+                    .createdDate(existing.getCreatedDate())
+                    .expiresAt(existing.getExpiresAt())
+                    .clickCounter(existing.getClickCounter())
+                    .build();
+        }
         String shortCode = resolveCode(shortenRequest.getAlias());
         UrlMapping urlMapping = UrlMapping.builder()
                 .originalUrl(originalUrl)
                 .shortCode(shortCode)
-                .user(getCurrentUser())
+                .user(currentUser)
                 .build();
         UrlMapping saved = urlMappingRepo.save(urlMapping);
         return ShortenResponse.builder()
@@ -166,5 +184,29 @@ public class UrlShortenerService
             throw new RuntimeException("Failed to generate QR code");
         }
         return outputStream.toByteArray();
+    }
+
+    public void deleteOne(String shortCode)
+    {
+        UrlMapping urlMapping = urlMappingRepo.findByShortCode(shortCode).orElseThrow(() -> new ResourceNotFoundException("URL not found"));
+        User currentUser = getCurrentUser();
+            if(urlMapping.getUser() == null || !urlMapping.getUser().equals(currentUser))
+            {
+                throw new IllegalArgumentException("You are not authorized to delete this URL");
+            }
+        urlMappingRepo.delete(urlMapping);
+    }
+
+    public void deleteAll()
+    {
+        User user = getCurrentUser();
+        if(user != null)
+        {
+            urlMappingRepo.deleteByUser(user);
+        }
+        else
+        {
+            throw new IllegalArgumentException("You must be logged in to delete URLs");
+        }
     }
 }

@@ -64,4 +64,20 @@
         {
             return ResponseEntity.ok(urlShortenerService.getMyUrls());
         }
+
+        @DeleteMapping("/delete/{shortCode}")
+        public ResponseEntity<Void> deleteShortUrl(@PathVariable String shortCode)
+        {
+            urlShortenerService.deleteOne(shortCode);
+
+            return ResponseEntity.noContent().build();
+        }
+
+        @DeleteMapping("/delete/all")
+        public ResponseEntity<Void> deleteAll()
+        {
+            urlShortenerService.deleteAll();
+
+            return ResponseEntity.noContent().build();
+        }
     }
