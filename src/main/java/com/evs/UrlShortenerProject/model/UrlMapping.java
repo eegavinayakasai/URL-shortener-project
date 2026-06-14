@@ -30,7 +30,7 @@ public class UrlMapping
     private LocalDateTime createdDate;
 
     @Column(name="expires_at")
-    public LocalDateTime expiresAt;
+    private LocalDateTime expiresAt;
 
     @PrePersist
     public void prePersistExpires()
