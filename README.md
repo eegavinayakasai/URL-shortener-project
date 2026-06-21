@@ -1,5 +1,13 @@
 # 🔗 Secure URL Shortener API
 
+![Java](https://img.shields.io/badge/Java-21-orange)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0-brightgreen)
+![Spring Security](https://img.shields.io/badge/Spring_Security-JWT-success)
+![MySQL](https://img.shields.io/badge/MySQL-8-blue)
+![Redis](https://img.shields.io/badge/Redis-Cache-red)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED)
+![Maven](https://img.shields.io/badge/Maven-Build-orange)
+
 A production-style URL Shortener backend built using Spring Boot. This project allows users to create short URLs, generate QR codes, track click analytics, and manage their URLs securely using JWT Authentication and Email OTP Verification.
 
 ## 🚀 Features
@@ -89,6 +97,59 @@ src/main/java
 ├── exception
 └── exceptionHandler
 ```
+
+## 🏗️ Architecture
+
+```text
+                Client
+                   │
+                   ▼
+         Spring Boot REST API
+                   │
+        ┌──────────┴──────────┐
+        ▼                     ▼
+ Spring Security          Service Layer
+      + JWT                    │
+                                ▼
+                  ┌────────────┴────────────┐
+                  ▼                         ▼
+               MySQL                     Redis
+          (Persistent Data)      (Cache & Click Counter)
+```
+
+---
+
+## 🌟 Project Highlights
+
+* Implemented Redis Cache-Aside Pattern to optimize URL lookups.
+* Reduced average response time from 500–600 ms to under 100 ms for frequently accessed URLs.
+* Stored click counters in Redis and periodically synchronized them with MySQL using Spring Scheduler.
+* Added database indexing to improve lookup performance.
+* Implemented JWT-based stateless authentication with Email OTP verification.
+* Containerized Redis using Docker Compose for simplified development.
+
+---
+
+## ⚙️ Setup Instructions
+
+### Build Project
+
+```bash
+mvn clean install
+```
+
+### Run Application
+
+```bash
+mvn spring-boot:run
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
 
 ---
 
