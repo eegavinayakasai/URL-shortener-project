@@ -42,6 +42,7 @@
         @GetMapping("/{code}")
         public ResponseEntity<Void> redirect(@PathVariable String code)
         {
+            urlShortenerService.incrementClickCount(code);
             String originalUrl = urlShortenerService.getOriginalUrl(code);
             return ResponseEntity
                     .status(HttpStatus.FOUND)
