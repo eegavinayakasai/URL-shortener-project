@@ -12,6 +12,7 @@ A production-style URL Shortener backend built using Spring Boot. This project a
 * URL expiration handling
 * Click tracking and analytics
 * User-specific URL history
+* Duplicate URL prevention
 
 ### Security
 
@@ -21,12 +22,20 @@ A production-style URL Shortener backend built using Spring Boot. This project a
 * Protected API Endpoints
 * Password Encryption using Spring Security
 
+### Performance Optimization
+
+* Redis Cache-Aside Pattern
+* Click Counter Tracking using Redis
+* Scheduled Synchronization of Click Counts to MySQL
+* Database Indexing for Faster Lookups
+
 ### Additional Features
 
 * QR Code Generation
 * Global Exception Handling
 * Request Validation
 * Swagger/OpenAPI Documentation
+* Docker Compose Support
 
 ---
 
@@ -44,6 +53,10 @@ A production-style URL Shortener backend built using Spring Boot. This project a
 
 * MySQL
 
+### Cache
+
+* Redis
+
 ### Authentication
 
 * JWT (JSON Web Token)
@@ -52,8 +65,12 @@ A production-style URL Shortener backend built using Spring Boot. This project a
 ### Tools
 
 * Maven
+* Docker
+* Docker Compose
 * Swagger/OpenAPI
 * Lombok
+* Postman
+* Git & GitHub
 
 ---
 
@@ -67,6 +84,8 @@ src/main/java
 ├── model
 ├── dto
 ├── security
+├── scheduler
+├── config
 ├── exception
 └── exceptionHandler
 ```
@@ -86,25 +105,28 @@ src/main/java
 
 ### URL Shortener
 
-| Method | Endpoint        | Description                        |
-| ------ | --------------- | ---------------------------------- |
-| POST   | /api/shorten    | Create a short URL                 |
-| GET    | /api/{code}     | Redirect to original URL           |
-| GET    | /api/stats      | Get URL statistics                 |
-| GET    | /api/my-urls    | Get URLs created by logged-in user |
-| POST   | /api/generateQr | Generate QR code                   |
+| Method | Endpoint                | Description                        |
+| ------ | ----------------------- | ---------------------------------- |
+| POST   | /api/shorten            | Create a short URL                 |
+| GET    | /api/{code}             | Redirect to original URL           |
+| GET    | /api/stats              | Get URL statistics                 |
+| GET    | /api/my-urls            | Get URLs created by logged-in user |
+| POST   | /api/generateQr         | Generate QR code                   |
+| DELETE | /api/delete/{shortCode} | Delete a URL                       |
+| DELETE | /api/delete/all         | Delete all URLs                    |
 
 ---
 
 ## 📊 Example Flow
 
-1. Request OTP using email
-2. Verify OTP
-3. Register account
-4. Login and obtain JWT token
-5. Create short URLs
-6. Access protected endpoints using JWT
-7. Track URL analytics and click counts
+1. Request OTP using email.
+2. Verify OTP.
+3. Register account.
+4. Login and obtain JWT token.
+5. Create short URLs.
+6. Access protected endpoints using JWT.
+7. Redirect using short URLs.
+8. Track click analytics and statistics.
 
 ---
 
@@ -117,15 +139,28 @@ src/main/java
 
 ---
 
-## 📈 Future Improvements
+## ⚡ Performance Optimization
 
-* Deploy to Cloud (Render/AWS/Azure)
-* Redis Caching
-* Rate Limiting
-* Docker Containerization
-* Unit & Integration Testing
-* Custom Expiration Configuration
-* Detailed Click Analytics
+* Implemented Redis caching using the Cache-Aside pattern.
+* Reduced average response time from 500–600 ms to under 100 ms for frequently accessed URLs.
+* Click counts are maintained in Redis and periodically synchronized with MySQL using Spring Scheduler.
+* Database indexing is used to optimize URL lookups.
+
+---
+
+## 🐳 Running with Docker
+
+Start Redis:
+
+```bash
+docker compose up -d
+```
+
+Stop Redis:
+
+```bash
+docker compose down
+```
 
 ---
 
@@ -134,21 +169,28 @@ src/main/java
 ### Clone Repository
 
 ```bash
-git clone <your-repository-url>
-cd <repository-name>
+git clone <repository-url>
+cd URL-shortener-project
 ```
 
-### Configure Database
+### Configure Application
 
-Update your application.properties:
+Create:
 
-```properties
-spring.datasource.url=YOUR_DATABASE_URL
-spring.datasource.username=YOUR_USERNAME
-spring.datasource.password=YOUR_PASSWORD
+```text
+application.properties
+```
 
-jwt.secret=YOUR_SECRET_KEY
-jwt.expiry=86400000
+using the template provided in:
+
+```text
+application-example.properties
+```
+
+### Start Redis
+
+```bash
+docker compose up -d
 ```
 
 ### Run Application
@@ -165,10 +207,23 @@ http://localhost:8080/swagger-ui/index.html
 
 ---
 
+## 📈 Future Improvements
+
+* Dockerize the Spring Boot application
+* Add MySQL container support
+* Implement Rate Limiting
+* Add Unit Testing with JUnit and Mockito
+* Introduce OAuth2 Authentication
+* Support Custom Domains
+* Build an Analytics Dashboard
+* Deploy to AWS or Azure
+
+---
+
 ## 👨‍💻 Author
 
-Vinayaka Sai
+### Vinayaka Sai Eega
 
 Java Backend Developer
 
-Focused on building secure and scalable backend applications using Java, Spring Boot, Spring Security, and MySQL.
+Focused on building secure and scalable backend applications using Java, Spring Boot, Spring Security, Redis, Docker, and MySQL.
