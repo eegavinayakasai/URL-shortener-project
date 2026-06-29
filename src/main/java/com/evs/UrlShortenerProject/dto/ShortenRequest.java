@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
 
+import java.util.HashMap;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
