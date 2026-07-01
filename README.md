@@ -1,5 +1,7 @@
 # 🔗 Secure URL Shortener API
 
+![JUnit 5](https://img.shields.io/badge/JUnit-5-success)
+![Mockito](https://img.shields.io/badge/Mockito-Testing-blueviolet)
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0-brightgreen)
 ![Spring Security](https://img.shields.io/badge/Spring_Security-JWT-success)
@@ -9,6 +11,14 @@
 ![Maven](https://img.shields.io/badge/Maven-Build-orange)
 
 A production-style URL Shortener backend built using Spring Boot. This project allows users to create short URLs, generate QR codes, track click analytics, and manage their URLs securely using JWT Authentication and Email OTP Verification.
+
+## 📌 Key Highlights
+
+- 🔐 JWT Authentication with Email OTP Verification
+- ⚡ Redis Cache-Aside Pattern reducing response time from ~500–600 ms to under 100 ms
+- 📊 Click analytics using Redis with scheduled synchronization to MySQL
+- 🧪 Service-layer unit testing using JUnit 5 & Mockito
+- 🐳 Docker Compose support for local development
 
 ## 🚀 Features
 
@@ -36,6 +46,13 @@ A production-style URL Shortener backend built using Spring Boot. This project a
 * Click Counter Tracking using Redis
 * Scheduled Synchronization of Click Counts to MySQL
 * Database Indexing for Faster Lookups
+
+### Testing
+
+* Unit Testing using JUnit 5
+* Mockito for mocking repositories and dependencies
+* Service Layer Unit Tests
+* Authorization & Exception Path Testing
 
 ### Additional Features
 
@@ -70,6 +87,11 @@ A production-style URL Shortener backend built using Spring Boot. This project a
 * JWT (JSON Web Token)
 * Email OTP Verification
 
+### Testing
+
+* JUnit 5
+* Mockito
+
 ### Tools
 
 * Maven
@@ -85,17 +107,23 @@ A production-style URL Shortener backend built using Spring Boot. This project a
 ## 📂 Project Structure
 
 ```text
-src/main/java
-├── controller
-├── service
-├── repository
-├── model
-├── dto
-├── security
-├── scheduler
-├── config
-├── exception
-└── exceptionHandler
+src
+├── main
+│   └── java
+│       ├── controller
+│       ├── service
+│       ├── repository
+│       ├── model
+│       ├── dto
+│       ├── scheduler
+│       ├── security
+│       ├── config
+│       └── exception
+│
+└── test
+    └── java
+        └── service
+            └── UrlShortenerServiceTest
 ```
 
 ## 🏗️ Architecture
@@ -127,6 +155,7 @@ src/main/java
 * Added database indexing to improve lookup performance.
 * Implemented JWT-based stateless authentication with Email OTP verification.
 * Containerized Redis using Docker Compose for simplified development.
+* Added comprehensive unit tests using JUnit 5 and Mockito for service-layer business logic.
 
 ---
 
@@ -142,6 +171,14 @@ mvn clean install
 
 ```bash
 mvn spring-boot:run
+```
+
+## 🧪 Running Tests
+
+Run all unit tests:
+
+```bash
+mvn test
 ```
 
 ---
@@ -209,6 +246,21 @@ This project is licensed under the MIT License.
 
 ---
 
+## ✅ Unit Testing
+
+Service layer unit tests are implemented using **JUnit 5** and **Mockito**.
+
+Covered scenarios include:
+
+* URL creation
+* Existing URL detection
+* URL redirection
+* URL expiration
+* Click statistics
+* Authorization checks
+* Resource not found scenarios
+* Delete operations
+
 ## 🐳 Running with Docker
 
 Start Redis:
@@ -273,7 +325,6 @@ http://localhost:8080/swagger-ui/index.html
 * Dockerize the Spring Boot application
 * Add MySQL container support
 * Implement Rate Limiting
-* Add Unit Testing with JUnit and Mockito
 * Introduce OAuth2 Authentication
 * Support Custom Domains
 * Build an Analytics Dashboard
