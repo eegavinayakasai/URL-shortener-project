@@ -162,10 +162,10 @@
                     .thenReturn(Optional.of(user));
             urlShortenerService.deleteOne("abc123");
             verify(urlMappingRepo).findByShortCode("abc123");
-            verify(stringRedisTemplate).delete("clickCount::abc123");
             verify(userRepo)
                     .findByEmail("dummyEmail");
             verify(urlMappingRepo).delete(urlMapping);
+            verify(stringRedisTemplate).delete("clickCount::abc123");
         }
 
         @Test
@@ -177,7 +177,7 @@
                     () -> urlShortenerService.deleteOne("abc123"));
             assertTrue(resourceNotFoundException.getMessage().contains("not found"));
             verify(urlMappingRepo).findByShortCode("abc123");
-            verify(stringRedisTemplate).delete("clickCount::abc123");
+            verify(stringRedisTemplate, never()).delete("clickCount::abc123");
             verify(urlMappingRepo, never()).delete(any());
         }
 
@@ -203,7 +203,7 @@
             IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class,
                     () ->  urlShortenerService.deleteOne("abc123"));
             assertTrue(illegalArgumentException.getMessage().contains("not authorized"));
-            verify(stringRedisTemplate).delete("clickCount::abc123");
+            verify(stringRedisTemplate, never()).delete("clickCount::abc123");
             verify(urlMappingRepo).findByShortCode("abc123");
             verify(urlMappingRepo, never()).delete(any());
         }
@@ -229,7 +229,7 @@
             IllegalArgumentException illegalArgumentException = assertThrows(IllegalArgumentException.class,
                     () -> urlShortenerService.deleteOne("abc123"));
             assertTrue(illegalArgumentException.getMessage().contains("not authorized"));
-            verify(stringRedisTemplate).delete("clickCount::abc123");
+            verify(stringRedisTemplate,never()).delete("clickCount::abc123");
             verify(urlMappingRepo).findByShortCode("abc123");
             verify(urlMappingRepo, never()).delete(any());
         }

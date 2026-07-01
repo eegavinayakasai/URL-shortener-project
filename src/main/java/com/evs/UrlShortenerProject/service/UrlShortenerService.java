@@ -208,14 +208,16 @@
         @CacheEvict(key = "#shortCode", value = "url")
         public void deleteOne(String shortCode)
         {
-            redisTemplate.delete("clickCount::" + shortCode);
-            UrlMapping urlMapping = urlMappingRepo.findByShortCode(shortCode).orElseThrow(() -> new ResourceNotFoundException("URL not found"));
+            UrlMapping urlMapping = urlMappingRepo
+                    .findByShortCode(shortCode)
+                    .orElseThrow(() -> new ResourceNotFoundException("URL not found"));
             User currentUser = getCurrentUser();
                 if(urlMapping.getUser() == null || !urlMapping.getUser().equals(currentUser))
                 {
                     throw new IllegalArgumentException("You are not authorized to delete this URL");
                 }
             urlMappingRepo.delete(urlMapping);
+            redisTemplate.delete("clickCount::" + shortCode);
             System.out.println("DB called");
         }
 
